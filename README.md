@@ -1,18 +1,16 @@
-# main.java.model.Student Management System (Java 学习项目) 🎓
+# Student Management System (Java 学习项目) 🎓
 
-这是一个基于 Java 开发的控制台学生管理系统，用于练习基础语法和 CRUD（增删改查）逻辑。
+这是一个基于 Java 开发的后端教职工信息管理与学生抢课系统，用于练习基础语法和流行框架的CRUD逻辑。
 
 ## 🚀 功能特性
 
-- 添加学生信息 (姓名、学号、性别、年龄)
-- 删除指定学号的学生
-- 修改学生详细资料
-- 查询学生信息列表
-- 循环操作直到退出
+- 对师生信息进行增删改查
+- 通过python脚本运行request请求对后端api进行测试
+- 学生选课信息管理
 
 ## 🛠️ 技术栈
 
 - Spring Boot
 - Mybaits-plus
-- MVC: Controller+Service, Mapping, Entity
-- 日志和错误处理: Common
+- MVC: Controller+Service, Mapper, Entity 
+- utils: 常用工具，如：异常处理，日志打印和返回值Result的模板编程
