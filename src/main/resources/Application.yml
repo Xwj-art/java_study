@@ -10,14 +10,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/java_study?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
     username: root
-    password:  # 填写你的数据库密码
+    password: coisini1215 # 填写你的数据库密码
 
 # 2. MyBatis-Plus 配置 (取代了之前的 mybatis-config.xml)
 mybatis-plus:
   # 如果有 Mapper XML 文件，放在 resources/mapper 目录下
   mapper-locations: classpath:/mapper/*.xml
   # 实体类所在包名，配置后在 XML 中可以直接写类名，不用写全路径
-  type-aliases-package: com.example.entity
+  type-aliases-package: org.example.entity
   configuration:
     # 开启驼峰命名自动转换（如数据库名 user_name -> 实体类字段 userName）
     map-underscore-to-camel-case: true
