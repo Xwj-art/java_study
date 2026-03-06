@@ -8,13 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @TableName("student")
 public class Student {
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-    private String name;
-    private short gender;
-    private Integer age;
+    @TableId(type=IdType.AUTO)
+    Integer id;
+    String name;
+    Integer age;
+    Short grade;
 }

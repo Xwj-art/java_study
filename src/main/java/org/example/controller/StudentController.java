@@ -1,32 +1,30 @@
 package org.example.controller;
 
-import org.example.common.Result;
+import org.example.utils.Result;
 import org.example.entity.Student;
-import org.example.mapper.StudentMapper;
 import org.example.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/student") // 统一路径为student
+@RequestMapping("/student")
 public class StudentController {
     @Autowired
     private StudentService studentService;
-    @GetMapping("/all")
-    public Result<List<Student>> getAllStudent(){
-        List<Student> s = studentService.list();
-        return Result.success(s);
-    }
-    @GetMapping("/{id}")
-    public Result<Student> getStudentById(@PathVariable String id){
-        Student s = studentService.getById(id);
-        return Result.success(s);
-    }
     @PostMapping("/add")
-    public Result addStudent(@RequestBody Student student){
-        boolean flag = studentService.save(student);
-        return flag?Result.success(true):Result.fail(500);
+    public Result<Boolean> addByStudent(@RequestBody Student student) {
+        return Result.success(studentService.save(student));
+    }
+    @DeleteMapping("/del")
+    public Result<Boolean> deleteById(@RequestParam Integer id) {
+        return Result.success(studentService.removeById(id));
+    }
+    @PostMapping("/update")
+    public Result<Boolean> updateByStudent(@RequestBody Student student) {
+        return Result.success(studentService.updateById(student));
+    }
+    @GetMapping("/search")
+    public Result<Student> getById(@RequestParam Integer id) {
+        return Result.success(studentService.getById(id));
     }
 }
