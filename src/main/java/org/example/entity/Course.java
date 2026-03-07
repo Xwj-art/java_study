@@ -1,11 +1,11 @@
 package org.example.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 // 课程信息
 @Data
@@ -15,6 +15,13 @@ import lombok.NoArgsConstructor;
 public class Course {
     @TableId(type = IdType.AUTO)
     private Integer id;
+
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
+
     private String name;
 
     private Float credits;

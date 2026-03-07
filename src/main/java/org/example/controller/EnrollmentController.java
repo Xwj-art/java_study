@@ -1,8 +1,10 @@
 package org.example.controller;
 
 import org.example.entity.Enrollment;
+import org.example.exception.BusinessException;
 import org.example.service.EnrollmentService;
 import org.example.utils.Result;
+import org.example.utils.ThrowUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +24,14 @@ public class EnrollmentController {
 
     @PostMapping("/update")
     public Result<Boolean> updateEnrollment(@RequestBody Enrollment enrollment) {
-        return Result.success(enrollmentService.updateById(enrollment));
+        ThrowUtils.throwIf(enrollmentService.updateById(enrollment), 400, "更新选课信息失败");
+        return Result.success();
     }
 
     @GetMapping("/search")
     public Result<Enrollment> searchEnrollment(@RequestParam Integer id) {
-        return Result.success(enrollmentService.getById(id));
+        Enrollment enrollment = enrollmentService.getById(id);
+        ThrowUtils.throwIf(enrollment == null, new BusinessException("未找到选课记录", 400));
+        return Result.success(enrollment);
     }
 }

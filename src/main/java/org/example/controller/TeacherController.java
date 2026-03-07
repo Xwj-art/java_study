@@ -1,6 +1,5 @@
 package org.example.controller;
 
-import org.apache.ibatis.annotations.Delete;
 import org.example.entity.Teacher;
 import org.example.service.TeacherService;
 import org.example.utils.Result;

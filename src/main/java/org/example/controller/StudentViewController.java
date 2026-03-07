@@ -2,6 +2,7 @@ package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.pojo.vo.CourseOfStudentVO;
+import org.example.pojo.vo.PageResultVO;
 import org.example.service.EnrollmentService;
 import org.example.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,10 @@ public class StudentViewController {
     EnrollmentService enrollmentService;
 
     @GetMapping("/my-course")
-    public Result<IPage<CourseOfStudentVO>> getMyCourse(@RequestParam(defaultValue = "1") int current,
+    public Result<PageResultVO<CourseOfStudentVO>> getMyCourse(@RequestParam(defaultValue = "1") int current,
                                                         @RequestParam(defaultValue = "10") int size,
                                                         @RequestParam Integer studentId) {
         IPage<CourseOfStudentVO> page = enrollmentService.getStudentCoursePage(current, size, studentId);
-        return Result.success(page);
+        return Result.success(PageResultVO.from(page));
     }
 }

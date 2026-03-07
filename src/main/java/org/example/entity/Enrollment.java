@@ -1,11 +1,14 @@
 package org.example.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 // 选课记录，中间表
 // TODO: 需要加入选课时间
@@ -18,6 +21,12 @@ public class Enrollment {
     private Integer teacher_id;
     private Integer student_id;
     private Integer course_id;
+
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
 
     private Integer semester;
     // 每个学生对应一则成绩，可以为空，到了考试结束才填写
