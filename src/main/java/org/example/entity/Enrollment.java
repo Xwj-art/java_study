@@ -1,25 +1,31 @@
 package org.example.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+// 选课记录，中间表
+// TODO: 需要加入选课时间
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("enrollment")
 public class Enrollment {
     private Integer id;
+    private Integer teacher_id;
     private Integer student_id;
     private Integer course_id;
-    private Integer semester;
-    private float grade;
 
-    public Enrollment(Integer student_id, Integer course_id, float grade) {
+    private Integer semester;
+    // 每个学生对应一则成绩，可以为空，到了考试结束才填写
+    private Float grade;
+
+    public Enrollment(Integer student_id, Integer course_id) {
         this.student_id = student_id;
         this.course_id = course_id;
-        this.grade = grade;
 
         LocalDate now = LocalDate.now();
         int year = now.getYear();

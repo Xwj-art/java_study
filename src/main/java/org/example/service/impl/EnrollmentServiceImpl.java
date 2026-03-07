@@ -2,6 +2,8 @@ package org.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.entity.Course;
 import org.example.entity.Enrollment;
@@ -9,15 +11,16 @@ import org.example.entity.Student;
 import org.example.mapper.CourseMapper;
 import org.example.mapper.EnrollmentMapper;
 import org.example.mapper.StudentMapper;
+import org.example.pojo.vo.CourseOfStudentVO;
+import org.example.service.CourseService;
 import org.example.service.EnrollmentService;
 import org.example.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @Service
 public class EnrollmentServiceImpl extends ServiceImpl<EnrollmentMapper, Enrollment> implements EnrollmentService {
-    @Autowired
-    private EnrollmentMapper enrollmentMapper;
     @Autowired
     private StudentMapper studentMapper;
     @Autowired
@@ -37,7 +40,7 @@ public class EnrollmentServiceImpl extends ServiceImpl<EnrollmentMapper, Enrollm
          */
         QueryWrapper<Enrollment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("student_id", studentId).eq("course_id", courseId);
-        Long enrollCount = enrollmentMapper.selectCount(queryWrapper);
+        Long enrollCount = baseMapper.selectCount(queryWrapper);
         if (enrollCount != 0) {
             return false;
         }
@@ -45,15 +48,44 @@ public class EnrollmentServiceImpl extends ServiceImpl<EnrollmentMapper, Enrollm
         QueryWrapper<Enrollment> countQueryWrapper = new QueryWrapper<>();
         countQueryWrapper.eq("course_id", courseId);
         Course course = courseMapper.selectById(courseId);
-        if (enrollmentMapper.selectCount(countQueryWrapper) >= course.getCapacity()) {
+        if (baseMapper.selectCount(countQueryWrapper) >= course.getCapacity()) {
             return false;
         }
 
         // 如果都过了，那就是能抢课，插入记录，容量-1
-        enrollmentMapper.insert(new Enrollment(studentId, courseId, 0));
+        baseMapper.insert(new Enrollment(studentId, courseId));
         UpdateWrapper<Course> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("course_id", courseId).set("capacity", course.getCapacity()-1);
         courseMapper.update(updateWrapper);
         return true;
+    }
+
+    @Override
+    public Boolean cancelEnrollment(Integer studentId, Integer courseId) {
+        /*
+         * 退选课程，判定学生是否有选课，有的话才能删除
+         * 若删除的话，需要将enrollment信息删除掉，并释放
+         * course的capacity，容量+1
+         */
+        if (studentMapper.selectById(studentId) == null ||
+        courseMapper.selectById(courseId) == null) {
+            return false;
+        }
+        QueryWrapper<Enrollment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("student_id", studentId).eq("course_id", courseId);
+        // 找到这条记录，并删除
+        baseMapper.delete(queryWrapper);
+        // 增加容量
+        UpdateWrapper<Course> updateWrapper = new UpdateWrapper<>();
+        Course  course = courseMapper.selectById(courseId);
+        updateWrapper.eq("course_id", courseId).set("capacity", course.getCapacity()-1);
+        courseMapper.update(updateWrapper);
+        return true;
+    }
+
+    @Override
+    public IPage<CourseOfStudentVO> getStudentCoursePage(int current, int size, Integer studentId) {
+        IPage<CourseOfStudentVO> page = new Page<>(current, size);
+        return baseMapper.getStudentCoursePage(page, studentId);
     }
 }
